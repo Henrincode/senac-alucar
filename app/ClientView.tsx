@@ -126,19 +126,6 @@ export function ClientView() {
                         bg-amber-50/80
                         shadow-2xl shadow-black/80
                     ">
-                        <p>aasdasd</p>
-                        <p>aasdasd</p>
-                        <p>aasdasd</p>
-                        <p>aasdasd</p>
-                        <p>aasdasd</p>
-                        <p>aasdasd</p>
-                        <p>aasdasd</p>
-                        <p>aasdasd</p>
-                        <p>aasdasd</p>
-                        <p>aasdasd</p>
-                        <div className="flex-1 min-h-0 p-10">
-                            <img src="https://maxitintas.vteximg.com.br/arquivos/ids/156554-600-600/Preto-Onix-Hyundai-SW.png?v=638017888489900000" alt="" className="max-h-full object-contain" />
-                        </div>
                     </div>
                 </div>
             </div>
