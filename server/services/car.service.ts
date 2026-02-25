@@ -35,13 +35,39 @@ const findModels = unstable_cache(
 )
 
 // create
+async function createModel(
+    params: CarModel & { id_car_model: number, name: string }
+) {
+    await sql`
+        INSERT INTO alc_car_models ${sql(params)}
+    `
+}
 
 // update
+async function updateModel(
+    params: CarModel & { id_car_model: number }
+) {
+    await sql`
+        UPDATE alc_car_models set ${sql(params)}
+        where id_car_model = ${params.id_car_model}
+    `
+}
 
 // delete
+async function deleteModel(
+    params: CarModel & { id_car_model: number }
+) {
+    await sql`
+        DELETE from alc_car_models
+        where id_car_model = ${params.id_car_model}
+    `
+}
 
 const carService = {
-    findModels
+    findModels,
+    createModel,
+    updateModel,
+    deleteModel
 }
 
 export default carService

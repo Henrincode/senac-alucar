@@ -11,6 +11,11 @@ export interface CarModel {
     deleted_at?: Date | undefined
 }
 
+export type CarErrors = Record<string, string | boolean>
+
 export interface CarsReturn {
-    // ...
+    data?: CarModel[]
+    success?: boolean
+    message?: string
+    errors?: CarErrors
 }
