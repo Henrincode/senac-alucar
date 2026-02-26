@@ -1,6 +1,6 @@
 'use server'
 
-import { CarModelErrors, CarModel, CarModelReturn, CarCategoryReturn, CarCategory, CarCategoryErrors } from "@/types/car.types";
+import { CarModelErrors, CarModel, CarModelReturn, CarCategoryReturn, CarCategory, CarCategoryErrors, CarBrandReturn, CarBrand, CarBrandErrors } from "@/types/car.types";
 import carService from "../services/car.service";
 import { updateTag } from "next/cache";
 
@@ -204,3 +204,100 @@ export async function deleteCarCategory(id: number): Promise<CarCategoryReturn<C
 // ------------------| brands
 // ------------------|
 
+// find brand
+export async function findCarBrands(): Promise<CarBrandReturn<CarBrand[]>> {
+    try {
+        const data = await carService.findBrands()
+        updateTag('cars')
+        return { success: true, data }
+    } catch (error) {
+        console.error('ERROR ACTION findCarBrands', error)
+        return { success: false, message: 'Erro interno no servidor' }
+    }
+}
+
+// find brand by id
+export async function findCarBrandById(id: number): Promise<CarBrandReturn<CarBrand>> {
+    if (!id) return { success: false, message: 'Parametro ID faltando' }
+    if (isNaN(id)) return { success: false, message: 'Parametro id deve ser do tipo' }
+
+    try {
+        const data = await carService.findBrandById(id)
+        updateTag('cars')
+        return { success: true, data }
+    } catch (error) {
+        console.error('ERROR ACTION findCarBrandById', error)
+        return { success: false, message: 'Erro interno no servidor' }
+    }
+}
+
+// create brand
+export async function createCarBrand(
+    params: CarBrand & { name: string }
+): Promise<CarBrandReturn<CarBrand>> {
+
+    if (!params) return { success: false, message: 'Não foi passado nenhum pârametro' }
+    const name = params.name?.toString().trim()
+
+    const errors: CarBrandErrors = {}
+
+    if (!name) errors.name = true
+
+    if (Object.keys(errors).length > 0) return { success: false, errors }
+
+    try {
+        params = {
+            name
+        }
+        const data = await carService.createBrand(params)
+        updateTag('cars')
+        return { success: true, data }
+    } catch (error) {
+        console.error('ERROR ACTION createCarBrand', error)
+        return { success: false, message: 'Erro interno no servidor' }
+    }
+}
+
+// update brand
+export async function updateCarBrand(
+    params: CarBrand & { id_car_brand: number, name: string }
+): Promise<CarBrandReturn<CarBrand>> {
+
+    if (!params) return { success: false, message: 'Não foi passado nenhum pârametro' }
+    const id_car_brand = params.id_car_brand
+    const name = params.name?.toString().trim()
+
+    const errors: CarBrandErrors = {}
+
+    if (!id_car_brand || isNaN(id_car_brand)) errors.id_car_brand = true
+    if (!name) errors.name = true
+
+    if (Object.keys(errors).length > 0) return { success: false, errors }
+
+    try {
+        params = {
+            id_car_brand, name
+        }
+        const data = await carService.updateBrand(params)
+        updateTag('cars')
+        return { success: true, data }
+    } catch (error) {
+        console.error('ERROR ACTION updateCarBrand', error)
+        return { success: false, message: 'Erro interno no servidor' }
+    }
+}
+
+// delete brand
+export async function deleteCarBrand(id: number): Promise<CarBrandReturn<CarBrand>> {
+    if (!id) return { success: false, message: 'Parametro ID faltando' }
+    if (isNaN(id)) return { success: false, message: 'Parametro id deve ser do tipo' }
+
+    try {
+        const data = await carService.deleteBrand(id)
+        updateTag('cars')
+        return { success: true, data }
+    } catch (error) {
+        console.error('ERROR ACTION deleteCarBrand', error)
+        return { success: false, message: 'Erro interno no servidor' }
+    }
+}
