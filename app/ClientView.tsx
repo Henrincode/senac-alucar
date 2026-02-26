@@ -2,10 +2,42 @@
 
 import { useState } from "react"
 
+interface Errors {
+    name?: boolean
+    mail?: boolean
+    phone?: boolean
+    city?: boolean
+    minDate?: boolean
+    maxDate?: boolean
+}
+
 export function ClientView() {
     const [minDate, setMinDate] = useState('')
     const [maxDate, setMaxDate] = useState('')
     const [carSelected, setCarSelected] = useState('1')
+
+    const [name, setName] = useState('')
+    const [mail, setMail] = useState('')
+    const [phone, setPhone] = useState('')
+    const [city, setCity] = useState('')
+
+    const [errors, setErrors] = useState<Errors>({})
+
+    async function btnRegister() {
+        setErrors({})
+        const newErrors: Errors = {}
+
+        if (!name) newErrors.name = true
+        if (!mail) newErrors.mail = true
+        if (!phone) newErrors.phone = true
+        if (!city) newErrors.city = true
+        if (!minDate) newErrors.minDate = true
+        if (!maxDate) newErrors.maxDate = true
+        setErrors(newErrors)
+        console.log('errors', errors)
+        console.log('newerrors', newErrors)
+    }
+
     return (
         <div className="
             w-dvw min-h-dvh md:h-dvh 
@@ -62,9 +94,9 @@ export function ClientView() {
                         [&_.date]:p-2
                         [&_.date]:outline-none
                         [&_.date]:rounded-lg
-                        [&_.date]:text-black
+                        [&_.date]:text-whaite
                         [&_.date]:border-2
-                        [&_.date]:border-black
+                        [&_.date]:border-whaite
                     ">
                         <h2 className="font-semibold text-4xl text-center md:italic">RESERVAR CARRO</h2>
                         <div className="line hidden"></div>
@@ -75,21 +107,33 @@ export function ClientView() {
                             na categoria
                         </p>
                         <div className="line"></div>
-                        <input type="text" placeholder="Nome completo" className="input" />
-                        <input type="text" placeholder="E-Mail" className="input" />
-                        <input type="number" placeholder="Telefone" min={0} className="
+                        <input onChange={(e) => setName(e.target.value)} value={name}
+                            type="text" placeholder="Nome completo" className={`input ${errors?.name && 'ring-2 ring-red-500'}`} />
+
+                        <input onChange={(e) => setMail(e.target.value)} value={mail}
+                            type="text" placeholder="E-Mail" className={`input ${errors.mail && 'ring-2 ring-red-500'}`} />
+
+                        <input onChange={(e) => setPhone(e.target.value)} value={phone}
+                            type="number" placeholder="Telefone" min={0} className={`
                         input [appearance:textfield]
                         [&::-webkit-outer-spin-button]:appearance-none
-                        [&::-webkit-inner-spin-button]:appearance-none"/>
-                        <input type="text" placeholder="Cidade" className="input" />
+                        [&::-webkit-inner-spin-button]:appearance-none
+                        ${errors.phone && 'ring-2 ring-red-500'}
+                        `} />
+
+                        <input onChange={(e) => setCity(e.target.value)} value={city}
+                            type="text" placeholder="Cidade" className={`input ${errors.city && 'ring-2 ring-red-500'}`} />
+
                         <div className="flex flex-col md:flex-row gap-2">
                             <div className="col">
                                 <label htmlFor="startDate" className="label">Retirada</label>
-                                <input type="date" name="" id="startDate" max={maxDate} onChange={(e) => setMinDate(e.target.value)} className="date invert" />
+                                <input type="date" name="" id="startDate" max={maxDate} onChange={(e) => setMinDate(e.target.value)}
+                                className={`date ${errors.minDate && 'ring-2 ring-red-500'}`} />
                             </div>
                             <div className="col">
                                 <label htmlFor="endDate" className="label">Devolução</label>
-                                <input type="date" name="" id="endDate" min={minDate} onChange={(e) => setMaxDate(e.target.value)} className="date invert" />
+                                <input type="date" name="" id="endDate" min={minDate} onChange={(e) => setMaxDate(e.target.value)}
+                                className={`date ${errors.maxDate && 'ring-2 ring-red-500'}`} />
                             </div>
                         </div>
                         <div className="line"></div>
@@ -105,17 +149,17 @@ export function ClientView() {
                                 [&_.button]:
                             ">
                                 <button type="button" onClick={() => setCarSelected('1')} className="button">{"<<"}</button>
-                                
+
                                 <select name="" id="" onChange={(e) => setCarSelected(e.target.value)} value={carSelected} className="button flex-1 text-center">
                                     <option value="1">Onix</option>
                                     <option value="2">HB20</option>
                                 </select>
-                                
+
                                 <button type="button" onClick={() => setCarSelected('2')} className="button">{">>"}</button>
                             </div>
                         </div>
                         <div className="line"></div>
-                        <button type="button" className="p-2 rounded-lg text-2xl text-gray-800 bg-amber-300 hover:bg-yellow-100 transition-all cursor-pointer">Reservar</button>
+                        <button onClick={btnRegister} type="button" className="p-2 rounded-lg text-2xl text-gray-800 bg-amber-300 hover:bg-yellow-100 transition-all cursor-pointer">Reservar</button>
                     </div>
 
                     {/* select car */}
