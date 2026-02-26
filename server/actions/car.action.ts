@@ -11,7 +11,7 @@ export async function findCarModel(): Promise<CarModelReturn<CarModel[]>> {
         return { success: true, data }
     } catch (error) {
         console.error('ERROR findCarModel', error)
-        return { success: false }
+        return { success: false, message: 'Erro interno do servidor' }
     }
 }
 
@@ -106,7 +106,6 @@ export async function deleteCarModel(id: number): Promise<CarModelReturn<CarMode
 export async function findCarCategories(): Promise<CarCategoryReturn<CarCategory[]>> {
     try {
         const data = await carService.findCategories()
-        updateTag('cars')
         return { success: true, data }
     } catch (error) {
         console.error('ERROR ACTION findCarCategories', error)
@@ -116,12 +115,14 @@ export async function findCarCategories(): Promise<CarCategoryReturn<CarCategory
 
 // find category by id
 export async function findCarCategoryById(id: number): Promise<CarCategoryReturn<CarCategory>> {
-    if (!id) return { success: false, message: 'Parametro ID faltando' }
-    if (isNaN(id)) return { success: false, message: 'Parametro id deve ser do tipo' }
+    if (typeof id === 'undefined') return { success: false, message: 'Parametro ID faltando' }
+    if (isNaN(id) || id === null) return { success: false, message: 'Parametro id deve ser do um número' }
+
+    id = Number(id)
 
     try {
         const data = await carService.findCategoryById(id)
-        updateTag('cars')
+        if (!data) return { success: false, message: 'Categoria não existe' }
         return { success: true, data }
     } catch (error) {
         console.error('ERROR ACTION findCarCategoryById', error)

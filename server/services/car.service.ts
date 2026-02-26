@@ -10,7 +10,7 @@ import { unstable_cache } from "next/cache";
 // find models
 const findModels = unstable_cache(
     async (): Promise<CarModel[]> => {
-        const data = await sql`
+        const data: CarModel[] = await sql`
             SELECT
                 car.id_car_model,
                 car.id_car_brand_fk,
@@ -28,7 +28,7 @@ const findModels = unstable_cache(
             inner join alc_car_brands bra
                 on car.id_car_brand_fk = bra.id_car_brand
         `
-        return data.map((d) => ({
+        return data.map((d: CarModel) => ({
             ...d,
             id_car_model: Number(d.id_car_model),
             id_car_brand_fk: Number(d.id_car_brand_fk),
