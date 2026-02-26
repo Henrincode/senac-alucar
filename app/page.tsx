@@ -1,4 +1,4 @@
-import Image from "next/image";
+import './estilo.css'
 import { ClientView } from "./ClientView";
 
 export default function Home() {
