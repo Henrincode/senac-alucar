@@ -1,10 +1,13 @@
 'use client'
 
+import { createClient } from "@/server/actions/client.action"
+import { Client } from "@/types/client.types"
 import { use, useEffect, useState } from "react"
 
 interface Errors {
     name?: boolean
     email?: boolean
+    emailExist?: boolean
 }
 
 export function ClientView() {
@@ -31,6 +34,25 @@ export function ClientView() {
             return;
         }
 
+        const data = {
+            name: cleanName,
+            email: cleanEmail
+        } as Required<Client>
+
+        const response = await createClient(data)
+
+        console.log(response)
+
+        if(!response.success) {
+            console.log(22222)
+            checkErrors.emailExist = true
+            setErrors(checkErrors)
+            return
+        }
+
+        setName('')
+        setEmail('')
+
         setErrors({});
         console.log("Enviando:", cleanName, cleanEmail);
     }
@@ -54,7 +76,8 @@ export function ClientView() {
 
                     <label className="rotulo">E-mail</label>
                     <p className={`${errors.email ? 'block' : 'hidden'}`}>campo obrigatório</p>
-                    <input onChange={e => {setEmail(e.target.value); setErrors({...errors, email: false})}} value={email}
+                    <p className={`${errors.emailExist ? 'block' : 'hidden'}`}>E-Mail já existe</p>
+                    <input onChange={e => {setEmail(e.target.value); setErrors({...errors, email: false, emailExist: false})}} value={email}
                         type="text" className={`campo-texto ${errors.email && 'ring-1 ring-red-500'}`} />
 
                     <label className="rotulo">Selecione o tipo de veículo</label>
