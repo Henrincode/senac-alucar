@@ -442,3 +442,20 @@ export async function deleteCarBrand(id: number): Promise<CarBrandReturn<CarBran
         return { success: false, message: 'Erro interno no servidor' }
     }
 }
+
+// image
+
+export async function uploadCarModelImage(params: { id_car_model: number, file: {image: File, name: string} }): Promise<CarModelReturn<CarModel>> {
+    if (!params) return { success: false, message: 'erro ao enviar imagem' }
+    if (!params.id_car_model || isNaN(params.id_car_model)) return { success: false, message: 'ID precisa ser um número do tipo number' }
+    if (!params.file) return { success: false, message: 'Arquivo esta faltando' }
+
+    try {
+        const data = await carService.uploadModelImage(params)
+        updateTag('cars')
+        return { success: true, data: data}
+    } catch(error) {
+        console.error('ERROR ACTION uploadCarModelImage', error)
+        return {success: false, message: 'Erro interno no servidor'}
+    }
+}

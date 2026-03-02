@@ -9,6 +9,7 @@ export default function NavBarAdm() {
     const router = useRouter()
 
     const [modal, setModal] = useState('')
+    
     return (
         <>
             {/* nav */}
@@ -74,9 +75,10 @@ export default function NavBarAdm() {
                             <div className="drop">
                                 <p>Ver carros</p>
                                 <p className="sub">add / editar / apagar</p>
-                                <p>modelo</p>
-                                <p onClick={() => setModal('brand')}>marca</p>
-                                <p>categoria</p>
+                                <p onClick={() => setModal('carModel')}>modelo</p>
+                                <p onClick={() => setModal('carBrand')}>marca</p>
+                                <p onClick={() => setModal('carCategory')}>categoria</p>
+                                <p onClick={() => setModal('carColor')}>Cores</p>
                             </div>
                         </li>
                     </ul>

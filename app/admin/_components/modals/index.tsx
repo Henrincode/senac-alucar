@@ -1,9 +1,11 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import ModalCreateCar from "./ModalCreateCar"
-import ModalCreateCategory from "./ModalCreateCategory"
-import ModalCreateBrand from "./ModalCreateBrand"
+import ModalCreateCarModel from "./ModalCreateCarModel"
+import ModalCreateCarCategory from "./ModalCreateCarCategory"
+import ModalCreateCarBrand from "./ModalCreateCarBrand"
+import ModalCreateCarColor from "./ModalCreateCarColor"
 
 export default function ModalsAdm({ setModal, modal }: { setModal: any, modal: string }) {
 
@@ -23,11 +25,13 @@ export default function ModalsAdm({ setModal, modal }: { setModal: any, modal: s
                 ${modal ? "absolute" : "hidden"}
                 z-100 left-0 top-0
                 flex justify-center items-center
-                w-dvw h-dvh backdrop-blur
+                w-dvw h-dvh p-2 backdrop-blur
             `}>
             {modal === 'car' && <ModalCreateCar closeModal={() => setModal('')} />}
-            {modal === 'category' && <ModalCreateCategory />}
-            {modal === 'brand' && <ModalCreateBrand />}
+            {modal === 'carModel' && <ModalCreateCarModel closeModal={() => setModal('')} />}
+            {modal === 'carCategory' && <ModalCreateCarCategory closeModal={() => setModal('')} />}
+            {modal === 'carBrand' && <ModalCreateCarBrand closeModal={() => setModal('')} />}
+            {modal === 'carColor' && <ModalCreateCarColor closeModal={() => setModal('')} />}
         </div >
     )
 }

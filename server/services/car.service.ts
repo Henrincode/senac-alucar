@@ -1,6 +1,7 @@
 import { Car, CarBrand, CarCategory, CarModel } from "@/types/car.types";
 import sql from "@/server/db";
 import { unstable_cache } from "next/cache";
+import storageServices from "./storage.service";
 
 /*
     Fazer
@@ -315,6 +316,7 @@ const findBrands = unstable_cache(
     async (): Promise<CarBrand[]> => {
         const data = await sql<CarBrand[]>`
         SELECT * from alc_car_brands
+        order by name asc
     `
         return data.map((d: CarBrand) => ({
             ...d,
@@ -356,7 +358,7 @@ async function updateBrand(
     params: CarBrand & { id_car_brand: number, name: string }
 ): Promise<CarBrand> {
     const [data] = await sql<CarBrand[]>`
-        UPDATE alc_car_brands set (${sql(params)})
+        UPDATE alc_car_brands set ${sql(params)}
         where id_car_brand = ${params.id_car_brand}
         RETURNING *
     `
@@ -369,6 +371,27 @@ async function deleteBrand(id: number): Promise<CarBrand> {
     const [data] = await sql<CarBrand[]>`
         DELETE FROM alc_car_brands
         WHERE id_car_brand = ${id}
+    `
+    return data
+}
+
+// image
+
+async function uploadModelImage({ id_car_model, file }: { id_car_model: number, file: { image: File, name: string } }): Promise<CarBrand> {
+    if (!file || !file.name) {
+        throw new Error("Arquivo inválido ou não selecionado.");
+    }
+    const { image } = file
+    const fileExt = file.name.split('.').pop()
+    const fileName = `${Math.random().toString().slice(2)}.${fileExt}`
+    const filePath = `models/${id_car_model}/${fileName}`
+
+    const image_url = await storageServices.image({ image, filePath })
+
+    const [data] = await sql`
+        UPDATE alc_car_models
+        SET image_url = ${image_url} 
+        WHERE id_car_model = ${id_car_model}
     `
     return data
 }
@@ -396,6 +419,8 @@ const carService = {
     createBrand,
     updateBrand,
     deleteBrand,
+    // image
+    uploadModelImage,
 }
 
 export default carService

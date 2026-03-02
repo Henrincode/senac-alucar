@@ -1,10 +1,10 @@
 'use client'
 
-export default function ModalCreateCar({ closeModal }: { closeModal: () => void }) {
+export default function ModalCreateCarColor({ closeModal }: { closeModal: () => void }) {
 
     return (
         <div onMouseDown={(e) => e.stopPropagation()} className="min-w-100 bg-white">
-            Carro
+            Carro cor
         </div>
     )
 }
