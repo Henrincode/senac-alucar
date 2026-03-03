@@ -248,6 +248,7 @@ const findCategories = unstable_cache(
     async (): Promise<CarCategory[]> => {
         const data = await sql<CarCategory[]>`
         SELECT * from alc_car_categories
+        ORDER BY name ASC
     `
         return data.map((d: CarCategory) => ({
             ...d,
@@ -289,7 +290,7 @@ async function updateCategory(
     params: CarCategory & { id_car_category: number, name: string }
 ): Promise<CarCategory> {
     const [data] = await sql<CarCategory[]>`
-        UPDATE alc_car_categories set (${sql(params)})
+        UPDATE alc_car_categories set ${sql(params)}
         where id_car_category = ${params.id_car_category}
         RETURNING *
     `

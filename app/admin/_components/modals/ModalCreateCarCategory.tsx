@@ -45,7 +45,7 @@ export default function ModalCreateCarCategory({ closeModal }: { closeModal: () 
             id_car_category: Number(inputUpdateData),
             name
         }
-
+        
         if (name) await updateCarCategory(payload)
 
         setName('')
