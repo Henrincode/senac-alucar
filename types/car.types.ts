@@ -41,8 +41,38 @@ export interface CarModel {
     brand?: string | null
     details?: string | null
     image_url?: string | null
+    image_file?: {
+        image: File
+        name: string
+    } | null
     created_at?: Date | null
     deleted_at?: Date | null
+}
+
+export interface CarModelService {
+    id_car_model?: number
+    id_car_brand_fk?: number
+    id_car_category_fk?: number
+    name?: string
+    category?: string | null
+    brand?: string | null
+    details?: string | null
+    image_url?: string | null
+    created_at?: Date | null
+    deleted_at?: Date | null
+}
+
+export interface CarModelCreatDB {
+    id_car_model: number
+    id_car_brand_fk: number
+    id_car_category_fk: number
+    name: string
+    category: string | null
+    brand: string | null
+    details: string | null
+    image_url: string | null
+    created_at: Date | null
+    deleted_at: Date | null
 }
 
 export type CarModelErrors = {

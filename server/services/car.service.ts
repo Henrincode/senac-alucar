@@ -1,4 +1,4 @@
-import { Car, CarBrand, CarCategory, CarModel } from "@/types/car.types";
+import { Car, CarBrand, CarCategory, CarModel, CarModelCreatDB } from "@/types/car.types";
 import sql from "@/server/db";
 import { unstable_cache } from "next/cache";
 import storageServices from "./storage.service";
@@ -206,9 +206,9 @@ const findModels = unstable_cache(
 
 // create model
 async function createModel(
-    params: CarModel & { name: string }
-): Promise<CarModel> {
-    const [data] = await sql<CarModel[]>`
+    params: Omit<CarModel, 'image_file'> & { name: string }
+): Promise<CarModelCreatDB> {
+    const [data] = await sql<CarModelCreatDB[]>`
         INSERT INTO alc_car_models ${sql(params)}
         RETURNING *
     `
@@ -217,7 +217,7 @@ async function createModel(
 
 // update model
 async function updateModel(
-    params: CarModel & { id_car_model: number }
+    params: Omit<CarModel, 'image_file'> & { id_car_model: number }
 ): Promise<CarModel> {
     const [data] = await sql<CarModel[]>`
         UPDATE alc_car_models set ${sql(params)}
@@ -393,6 +393,7 @@ async function uploadModelImage({ id_car_model, file }: { id_car_model: number, 
         UPDATE alc_car_models
         SET image_url = ${image_url} 
         WHERE id_car_model = ${id_car_model}
+        RETURNING *
     `
     return data
 }

@@ -14,7 +14,7 @@ export default function ClientViewAdmin() {
         [&_.icon-tittle]:
         ">
             <ul className="flex flex-row justify-center gap-4">
-                <li>
+                {/* <li>
                     <div className="icon-img"></div>
                     <p className="icon-tittle">Reservas</p>
                 </li>
@@ -25,7 +25,7 @@ export default function ClientViewAdmin() {
                 <li>
                     <div className="icon-img"></div>
                     <p className="icon-tittle">Carros</p>
-                </li>
+                </li> */}
             </ul>
         </div>
     )

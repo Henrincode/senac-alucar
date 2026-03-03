@@ -27,7 +27,7 @@ export default function ModalsAdm({ setModal, modal }: { setModal: any, modal: s
                 z-100 left-0 top-0 overflow-auto
                 w-dvw h-dvh p-2 backdrop-blur
             `}>
-            <div className="flex justify-center items-center h-full">
+            <div className="flex justify-center items-center min-h-full">
                 {modal === 'navMobile' && <ModalNavMobile setModal={setModal} closeModal={() => setModal('')} />}
                 {modal === 'car' && <ModalCreateCar closeModal={() => setModal('')} />}
                 {modal === 'carModel' && <ModalCreateCarModel closeModal={() => setModal('')} />}

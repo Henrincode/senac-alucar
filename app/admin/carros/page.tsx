@@ -1,8 +1,8 @@
-import { findCarBrands, findCarCategories, findCarModel } from "@/server/actions/car.action"
+import { findCarBrands, findCarCategories, findCarModels } from "@/server/actions/car.action"
 import ClientViewAdmin from "./ClientView"
 
 export default async function PageAdmin() {
-    const cars = await findCarModel()
+    const cars = await findCarModels()
     const categories = await findCarCategories()
     const brands = await findCarBrands()
     return (

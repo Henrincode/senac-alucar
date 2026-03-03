@@ -147,7 +147,7 @@ export async function deleteCar(id: number): Promise<CarReturn<Car>> {
 // ------------------|
 
 // findModel
-export async function findCarModel(): Promise<CarModelReturn<CarModel[]>> {
+export async function findCarModels(): Promise<CarModelReturn<CarModel[]>> {
     try {
         const data = await carService.findModels()
         return { success: true, data }
@@ -177,14 +177,33 @@ export async function createCarModel(
 
     if (Object.keys(errors).length > 0) return { success: false, errors, message: 'Campos inválidos' }
 
+    const file = params.image_file || null
+
     try {
         params = {
             id_car_category_fk, id_car_brand_fk, name, image_url, details
         }
 
         const data = await carService.createModel(params)
+
+        if (!file) {
+            updateTag('cars')
+            return { success: true, data }
+        }
+
+        if(!data.id_car_brand_fk) return { success: true, data }
+
+        const image = {
+            id_car_model: data.id_car_model,
+            file
+        }
+
+        const data_image = await uploadCarModelImage(image)
+
         updateTag('cars')
-        return { success: true, data }
+        return data_image
+
+
     } catch (error) {
         console.error('ERROR createCarModel', error)
         return { success: false, message: 'Erro interno no servidor' }
@@ -445,7 +464,7 @@ export async function deleteCarBrand(id: number): Promise<CarBrandReturn<CarBran
 
 // image
 
-export async function uploadCarModelImage(params: { id_car_model: number, file: {image: File, name: string} }): Promise<CarModelReturn<CarModel>> {
+export async function uploadCarModelImage(params: { id_car_model: number, file: { image: File, name: string } }): Promise<CarModelReturn<CarModel>> {
     if (!params) return { success: false, message: 'erro ao enviar imagem' }
     if (!params.id_car_model || isNaN(params.id_car_model)) return { success: false, message: 'ID precisa ser um número do tipo number' }
     if (!params.file) return { success: false, message: 'Arquivo esta faltando' }
@@ -453,9 +472,9 @@ export async function uploadCarModelImage(params: { id_car_model: number, file: 
     try {
         const data = await carService.uploadModelImage(params)
         updateTag('cars')
-        return { success: true, data: data}
-    } catch(error) {
+        return { success: true, data: data }
+    } catch (error) {
         console.error('ERROR ACTION uploadCarModelImage', error)
-        return {success: false, message: 'Erro interno no servidor'}
+        return { success: false, message: 'Erro interno no servidor' }
     }
 }
