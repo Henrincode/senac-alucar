@@ -5,11 +5,13 @@ import { ReactElement, useEffect, useState } from "react"
 import Image from 'next/image'
 import { CarBrand, CarCategory, CarModel, CarModelErrors, CarModelReturn } from "@/types/car.types"
 import { createCarModel, deleteCarModel, findCarBrands, findCarCategories, findCarModels, updateCarModel } from "@/server/actions/car.action"
-import { IoCloseSharp } from "react-icons/io5"
+import { IoCloseSharp, IoSearchCircle } from "react-icons/io5"
 import { IoIosCreate } from "react-icons/io"
 import { MdCreate } from "react-icons/md"
 import { FaCirclePlus, FaPlus } from "react-icons/fa6"
 import { TbCirclePlus } from "react-icons/tb"
+import { FaSearch } from "react-icons/fa"
+import { LiaSearchSolid } from "react-icons/lia"
 
 // TypeScript
 interface FileToUpload {
@@ -40,6 +42,7 @@ export default function ModalCreateCarModel({ closeModal }: { closeModal: () => 
     const [createCarErrors, setCreateCarErrors] = useState<CarModelErrors>({})
 
     // form states
+    const [inputSearch, setInputSearch] = useState('')
     const [inputName, setInputName] = useState<string>('')
     const [inputCategory, setInputCategory] = useState<string>('')
     const [inputBrand, setInputBrand] = useState<string>('')
@@ -274,21 +277,31 @@ export default function ModalCreateCarModel({ closeModal }: { closeModal: () => 
             <div className="w-full h-1 rounded-full bg-white/20"></div>
 
             {addCar || (
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-                    {models.map((d, i) => (
-                        <div key={i} onClick={() => editCar(d)} className="flex flex-col gap-1 p-2 text-center shadow-lg bg-white/10 hover:scale-150 hover:shadow-black/50 hover:bg-blue-500 transition-all cursor-pointer">
-                            <Image
-                                width={400}
-                                height={400}
-                                src={d.image_url || IMG_URL_DEFAULT} alt=""
-                                className="aspect-video h-full object-cover" />
-                            <div>
-                                <p className="text-xl lg:text-3xl">{d.name}</p>
-                                <p className="text-sm">{d.brand} / {d.category}</p>
+                <>
+                    <input onChange={(e) => setInputSearch(e.target.value)} value={inputSearch} type="text" className="campo text-2xl text-center" placeholder="🔎 Buscar na lista" />
+                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                        {models.filter(d => {
+                            const search = inputSearch
+                            return (
+                                d.name?.toLocaleLowerCase().includes(search)
+                                || d.brand?.toLocaleLowerCase().includes(search)
+                                || d.category?.toLocaleLowerCase().includes(search)
+                            )
+                        }).map((d, i) => (
+                            <div key={i} onClick={() => editCar(d)} className="flex flex-col gap-1 p-2 text-center shadow-lg bg-white/10 hover:scale-150 hover:shadow-black/50 hover:bg-blue-500 transition-all cursor-pointer">
+                                <Image
+                                    width={400}
+                                    height={400}
+                                    src={d.image_url || IMG_URL_DEFAULT} alt=""
+                                    className="aspect-video h-full object-cover" />
+                                <div>
+                                    <p className="text-xl lg:text-3xl">{d.name}</p>
+                                    <p className="text-sm">{d.brand} / {d.category}</p>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                </>
             )}
 
             {/* form create car */}
