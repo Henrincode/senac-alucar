@@ -191,7 +191,7 @@ export async function createCarModel(
             return { success: true, data }
         }
 
-        if(!data.id_car_brand_fk) return { success: true, data }
+        // if(!data.id_car_brand_fk) return { success: true, data }
 
         const image = {
             id_car_model: data.id_car_model,
@@ -232,12 +232,31 @@ export async function updateCarModel(
 
     if (Object.keys(errors).length > 0) return { success: false, errors, message: 'Campos inválidos' }
 
+    const file = params.image_file || null
+
     try {
         params = {
             id_car_model, id_car_category_fk, id_car_brand_fk, name, image_url, details
         }
 
         const data = await carService.updateModel(params)
+
+        if (!file) {
+            updateTag('cars')
+            return { success: true, data }
+        }
+
+        const image = {
+            id_car_model,
+            file
+        }
+
+        const data_image = await uploadCarModelImage(image)
+
+        updateTag('cars')
+        return data_image
+
+        // await uploadCarModelImage(file)
         updateTag('cars')
         return { success: true, data }
     } catch (error) {

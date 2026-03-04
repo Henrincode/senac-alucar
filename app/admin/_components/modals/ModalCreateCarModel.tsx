@@ -4,7 +4,12 @@ import imageCompression from "browser-image-compression"
 import { ReactElement, useEffect, useState } from "react"
 import Image from 'next/image'
 import { CarBrand, CarCategory, CarModel, CarModelErrors, CarModelReturn } from "@/types/car.types"
-import { createCarModel, findCarBrands, findCarCategories, findCarModels } from "@/server/actions/car.action"
+import { createCarModel, deleteCarModel, findCarBrands, findCarCategories, findCarModels, updateCarModel } from "@/server/actions/car.action"
+import { IoCloseSharp } from "react-icons/io5"
+import { IoIosCreate } from "react-icons/io"
+import { MdCreate } from "react-icons/md"
+import { FaCirclePlus, FaPlus } from "react-icons/fa6"
+import { TbCirclePlus } from "react-icons/tb"
 
 // TypeScript
 interface FileToUpload {
@@ -44,6 +49,9 @@ export default function ModalCreateCarModel({ closeModal }: { closeModal: () => 
     const [fileToUpload, setFileUpload] = useState<FileToUpload | null>(null)
     const [imageUrl, setImageUrl] = useState<string | null>(null)
 
+    // id for edit car
+    const [idForEdit, setIdForEdit] = useState<number | null>()
+
     //-- FUNCTIONS
 
     // DB load
@@ -66,7 +74,7 @@ export default function ModalCreateCarModel({ closeModal }: { closeModal: () => 
         }
     }
 
-    // form cancel
+    // form reset
     async function resetForm() {
         setInputName('')
         setInputCategory(String(categories[0].id_car_category))
@@ -76,10 +84,26 @@ export default function ModalCreateCarModel({ closeModal }: { closeModal: () => 
         setFileUpload(null)
         setImageUrl(null)
 
+        setIdForEdit(null)
         setAddCar(false)
     }
 
-    // create model
+    // open new car
+    async function openNewCar() {
+        setInputName('')
+        setInputCategory(String(categories[0].id_car_category))
+        setInputBrand(String(brands[0].id_car_brand))
+        setInputDetails('')
+
+        setFileUpload(null)
+        setImageUrl(null)
+
+        setIdForEdit(null)
+        setAddCar(true)
+    }
+
+
+    // create car
     async function btn_createCar(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
 
@@ -91,17 +115,75 @@ export default function ModalCreateCarModel({ closeModal }: { closeModal: () => 
             image_file: fileToUpload
         }
 
+        console.log('creat', payload)
+
         const response = await createCarModel(payload)
         if (response.success) {
             // const newModel = models.push(response.data)
 
             loadModels()
             resetForm()
+            setFileUpload(null)
             setAddCar(false)
+            setIdForEdit(null)
         } else {
             // Tratar erros
             if (response.errors) setCreateCarErrors(response.errors)
         }
+    }
+
+    // edit car
+    async function editCar(car: CarModel) {
+
+        setIdForEdit(car.id_car_model)
+        setInputName(String(car.name))
+        setInputCategory(String(car.id_car_category_fk))
+        setInputBrand(String(car.id_car_brand_fk))
+        setInputDetails(String(car.details || ''))
+
+        // setFileUpload(null)
+        setImageUrl(String(car.image_url || ''))
+
+        setAddCar(true)
+    }
+
+    async function btn_updateCar(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+
+        const payload: CarModel & { id_car_model: number, name: string } = {
+            id_car_model: Number(idForEdit),
+            id_car_category_fk: Number(inputCategory),
+            id_car_brand_fk: Number(inputBrand),
+            name: inputName,
+            details: inputDetails,
+            image_file: fileToUpload
+        }
+
+        console.log(payload)
+
+        const response = await updateCarModel(payload)
+        if (response.success) {
+            loadModels()
+            resetForm()
+            setFileUpload(null)
+            setAddCar(false)
+            setIdForEdit(null)
+        } else {
+            if (response.errors) setCreateCarErrors(response.errors)
+        }
+    }
+
+    async function btn_delete() {
+        if (!idForEdit) return
+        const response = await deleteCarModel(idForEdit)
+
+        if (response.success) {
+            loadModels()
+            resetForm()
+        } else {
+            if (response.errors) setCreateCarErrors(response.errors)
+        }
+
     }
 
     // capturar o arquivo do input, comprimir e enviar o obj para um hook
@@ -179,35 +261,39 @@ export default function ModalCreateCarModel({ closeModal }: { closeModal: () => 
             [&_.button]:transition-all
             [&_.button]:text-gray-800
             [&_.button]:hover:text-white
-            [&_.button]:bg-blue-300
-            [&_.button]:hover:bg-blue-500
+            
             [&_.button]:cursor-pointer
             ">
 
             <div className="relative flex flex-row items-center lg:gap-2 w-full text-2xl">
-                <button onClick={() => setAddCar(true)} className="absolute px-2 py-1 text-sm text-gray-800 bg-blue-300">Adicionar</button>
-                <p onClick={() => setAddCar(false)} className="flex-1 text-center"><span className="hidden lg:inline">Carros </span>modelos</p>
+                <button onClick={openNewCar} className="absolute flex flex-row gap- items-center px-2 py-1 text-sm text-gray-800 bg-blue-300 hover:bg-blue-500 hover:text-white cursor-pointer"><FaPlus /> Adicionar</button>
+                <button onClick={closeModal} className="absolute right-0 px-2 py-1 text-sm text-gray-800 bg-blue-300 hover:bg-blue-500 hover:text-white cursor-pointer"><span className="font-extrabold">X</span> fechar</button>
+                <p className="flex-1 text-center">Modelos<span className="hidden lg:inline"> de carros</span></p>
             </div>
 
             <div className="w-full h-1 rounded-full bg-white/20"></div>
 
-                {addCar || (
-                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-                        {models.map((d, i) => (
-                            <div key={i} className="flex flex-col gap-1 p-2 text-center shadow-lg bg-white/10 hover:scale-150 hover:shadow-black/50 hover:bg-blue-500 transition-all">
-                                <img src={d.image_url || IMG_URL_DEFAULT} alt="" className="aspect-video h-full object-cover" />
-                                <div>
-                                    <p className="text-xl lg:text-3xl">{d.name}</p>
-                                    <p className="text-sm">{d.brand} / {d.category}</p>
-                                </div>
+            {addCar || (
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                    {models.map((d, i) => (
+                        <div key={i} onClick={() => editCar(d)} className="flex flex-col gap-1 p-2 text-center shadow-lg bg-white/10 hover:scale-150 hover:shadow-black/50 hover:bg-blue-500 transition-all cursor-pointer">
+                            <Image
+                                width={400}
+                                height={400}
+                                src={d.image_url || IMG_URL_DEFAULT} alt=""
+                                className="aspect-video h-full object-cover" />
+                            <div>
+                                <p className="text-xl lg:text-3xl">{d.name}</p>
+                                <p className="text-sm">{d.brand} / {d.category}</p>
                             </div>
-                        ))}
-                    </div>
-                )}
+                        </div>
+                    ))}
+                </div>
+            )}
 
             {/* form create car */}
             {addCar && (
-                <form onReset={resetForm} onSubmit={btn_createCar} className="grid grid-cols-1 lg:grid-cols-8 gap-2 w-full">
+                <form onReset={resetForm} onSubmit={(e) => idForEdit ? btn_updateCar(e) : btn_createCar(e)} className="grid grid-cols-1 lg:grid-cols-8 gap-2 w-full">
                     {/* Coluna da Imagem */}
                     <div className="col-span-1 lg:row-span-3 lg:col-span-4">
 
@@ -257,8 +343,9 @@ export default function ModalCreateCarModel({ closeModal }: { closeModal: () => 
 
                     {/* buttons */}
                     <div className=" lg:col-span-4 flex flex-row gap-2">
-                        <button type="submit" className="button">Cadastrar</button>
-                        <button type="reset" className="button">Cancelar</button>
+                        <button type="submit" className="button bg-blue-300 hover:bg-blue-500">{idForEdit ? 'Atualizar' : 'Cadastrar'}</button>
+                        <button type="reset" className="button bg-blue-300 hover:bg-blue-500">Cancelar</button>
+                        <button onClick={btn_delete} type="button" className={`${idForEdit || 'hidden'} button bg-red-300 hover:bg-red-500`}>Excluir</button>
                     </div>
                 </form>
             )}
