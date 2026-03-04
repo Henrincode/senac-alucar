@@ -1,17 +1,11 @@
 'use client'
 
 import imageCompression from "browser-image-compression"
-import { ReactElement, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import Image from 'next/image'
-import { CarBrand, CarCategory, CarModel, CarModelErrors, CarModelReturn } from "@/types/car.types"
+import { CarBrand, CarCategory, CarModel, CarModelErrors } from "@/types/car.types"
 import { createCarModel, deleteCarModel, findCarBrands, findCarCategories, findCarModels, updateCarModel } from "@/server/actions/car.action"
-import { IoCloseSharp, IoSearchCircle } from "react-icons/io5"
-import { IoIosCreate } from "react-icons/io"
-import { MdCreate } from "react-icons/md"
-import { FaCirclePlus, FaPlus } from "react-icons/fa6"
-import { TbCirclePlus } from "react-icons/tb"
-import { FaSearch } from "react-icons/fa"
-import { LiaSearchSolid } from "react-icons/lia"
+import { FaPlus } from "react-icons/fa6"
 
 // TypeScript
 interface FileToUpload {
@@ -293,7 +287,7 @@ export default function ModalCreateCarModel({ closeModal }: { closeModal: () => 
                                     width={400}
                                     height={400}
                                     src={d.image_url || IMG_URL_DEFAULT} alt=""
-                                    className="aspect-video h-full object-cover" />
+                                    className="aspect-video w-full object-cover bg-amber-400" />
                                 <div>
                                     <p className="text-xl lg:text-3xl">{d.name}</p>
                                     <p className="text-sm">{d.brand} / {d.category}</p>

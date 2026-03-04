@@ -77,10 +77,11 @@ export default function NavBarAdm() {
                             <div className="drop">
                                 <p>Ver carros</p>
                                 <p className="sub">add / editar / apagar</p>
-                                <p onClick={() => setModal('carModel')}>modelo</p>
-                                <p onClick={() => setModal('carBrand')}>marca</p>
-                                <p onClick={() => setModal('carCategory')}>categoria</p>
+                                <p onClick={() => setModal('carModel')}>modelos</p>
+                                <p onClick={() => setModal('carBrand')}>marcas</p>
+                                <p onClick={() => setModal('carCategory')}>categorias</p>
                                 <p onClick={() => setModal('carColor')}>Cores</p>
+                                <p onClick={() => setModal('carStatus')}>Status</p>
                             </div>
                         </li>
                     </ul>

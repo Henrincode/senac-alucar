@@ -65,8 +65,9 @@ export default function ModalNavMobile({ setModal, closeModal }: { setModal: (p:
                     <div className="sub">add / editar / apagar</div>
                     <li onClick={() => setModal('carModel')}>Modelos</li>
                     <li onClick={() => setModal('carBrand')}>Marcas</li>
-                    <li onClick={() => setModal('carColor')}>Cores</li>
                     <li onClick={() => setModal('carCategory')}>Categorias</li>
+                    <li onClick={() => setModal('carColor')}>Cores</li>
+                    <li onClick={() => setModal('carStatus')}>Status</li>
                 </ul>
             </div>
         </div>

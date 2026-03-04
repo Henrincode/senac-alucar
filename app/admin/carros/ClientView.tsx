@@ -106,14 +106,7 @@ export default function ClientViewAdmin({ cars, categories, brands }: Params) {
                 </div>
                 {/* list */}
                 <div className="flex-1 p-2 border-3 rounded-lg border-gray-400">
-                    <ul className="flex flex-row gap-2 min-h-50">
-                        {/* <li>
-                            <button onClick={() => setModal('car')} className="p-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700 cursor-pointer">Adicionar</button>
-                        </li> */}
-                        {cars.data?.map((c: CarModel, i: number) => (
-                            <li onClick={() => c.id_car_model && deleteCarModel(c.id_car_model)} key={i} className="bg-amber-50">{c.name}</li>
-                        ))}
-                    </ul>
+                    carros
                 </div>
             </div>
         </div>
