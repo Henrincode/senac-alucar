@@ -153,6 +153,7 @@ export default function ModalCreateCarModel({ closeModal }: { closeModal: () => 
             id_car_brand_fk: Number(inputBrand),
             name: inputName,
             details: inputDetails,
+            image_url: imageUrl,
             image_file: fileToUpload
         }
 

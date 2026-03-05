@@ -9,7 +9,7 @@ import { FaBars } from "react-icons/fa";
 export default function NavBarAdm() {
     const router = useRouter()
 
-    const [modal, setModal] = useState('')
+    const [modal, setModal] = useState('carColor')
     
     return (
         <>
