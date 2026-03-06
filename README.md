@@ -1,4 +1,9 @@
-# Projeto SENAC - Alucar
+# Projeto SENAC - Locardora
+
+# for Guto Xavier:
+
+Guto boa noite!
+O backend esta quase completinho, mas o frontend 
 
 ## Criação do banco de dados:
 
